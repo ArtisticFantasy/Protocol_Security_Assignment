@@ -10,31 +10,6 @@ def read_json_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
         return [json.loads(line) for line in file]
 
-def write_json_file(filepath, data):
-    with open(filepath, 'w', encoding='utf-8') as file:
-        for item in data:
-            file.write(json.dumps(item, ensure_ascii=False) + '\n')
-
-def merge_and_deduplicate(json_files):
-    combined_data = []
-    seen = set()
-    
-    for file in json_files:
-        data = read_json_file(file)
-        for item in data:
-            key = (item['saddr'], item['sport'])
-            if key not in seen:
-                seen.add(key)
-                combined_data.append({
-                    "saddr": item['saddr'],
-                    "sport": item['sport'],
-                    "fingerprint": item['fingerprint'],
-                    "window": item['window'],
-                    "data": item['data'],
-                })
-    
-    return combined_data
-
 if __name__ == "__main__":
     opts, _ = getopt.getopt(sys.argv[1:], "i:o:", ["input-file", "output-file"])
     for opt, arg in opts:
@@ -43,11 +18,11 @@ if __name__ == "__main__":
         elif opt in ("-o", "--output-file"):
             output_file = arg
         else:
-            print('Usage: python combine_results.py -i <input_file> -o <output_file>')
+            print('Usage: python get_seed_list_based_on_last_iter.py -i <input_file> -o <output_file>')
             sys.exit(1)
             
     if input_file is None or output_file is None:
-        print('Usage: python combine_results.py -i <input_file> -o <output_file>')
+        print('Usage: python get_seed_list_based_on_last_iter.py -i <input_file> -o <output_file>')
         sys.exit(1)
     
     if not input_file.endswith('.json'):
